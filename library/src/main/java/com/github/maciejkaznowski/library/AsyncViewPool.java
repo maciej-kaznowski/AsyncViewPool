@@ -13,16 +13,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListener, ComponentCallbacks2 {
 
     private static final String TAG = "AsyncViewPool";
-    @NonNull private final SparseArray<List<View>> asyncInflatedViews = new SparseArray<>();
-    @NonNull private final Context context;
-    @NonNull private final AsyncLayoutInflater asyncLayoutInflater;
-    @Nullable private final ViewGroup parent;
+    @NonNull
+    private final SparseArray<List<View>> asyncInflatedViews = new SparseArray<>();
+    @NonNull
+    private final Context context;
+    @NonNull
+    private final AsyncLayoutInflater asyncLayoutInflater;
+    @Nullable
+    private final ViewGroup parent;
 
     private boolean debug;
     private boolean destroyed = false;
@@ -39,7 +46,8 @@ public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListe
     public AsyncViewPool(@NonNull Context context,
                          @Nullable ViewGroup parent,
                          boolean debug) {
-        Objects.requireNonNull(context, "Context cannot be null");
+        //noinspection ConstantConditions
+        if (context == null) throw new NullPointerException("Context cannot be null");
 
         this.context = context;
         this.parent = parent;
@@ -137,7 +145,7 @@ public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListe
     }
 
     public void inflate(@LayoutRes int layout, @Nullable ViewGroup parent) {
-        inflate(layout, parent, 0);
+        inflate(layout, parent, 1);
     }
 
     public void inflate(@LayoutRes int layout, @Nullable ViewGroup viewGroup, int count) {
