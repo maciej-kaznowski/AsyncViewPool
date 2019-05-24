@@ -13,17 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListener, ComponentCallbacks2 {
 
     private static final String TAG = "AsyncViewPool";
     @NonNull
-    private final SparseArray<List<View>> asyncInflatedViews = new SparseArray<>();
+    private final SparseArray<Queue<View>> asyncInflatedViews = new SparseArray<>();
     @NonNull
     private final Context context;
     @NonNull
@@ -105,15 +102,9 @@ public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListe
 
     @Nullable
     public View getView(@LayoutRes int layout) {
-        List<View> asyncPool = asyncInflatedViews.get(layout);
+        Queue<View> asyncPool = asyncInflatedViews.get(layout);
         if (asyncPool != null && !asyncPool.isEmpty()) {
-            View view;
-            if (asyncPool instanceof Queue) {
-                view = (View) ((Queue) asyncPool).poll();
-            } else {
-                view = asyncPool.get(0);
-                asyncPool.remove(0);
-            }
+            View view = asyncPool.poll();
 
             if (debug) {
                 String msg = String.format("Got inflated layout %s from async pool, %s remaining", ViewUtils.getLayoutHexString(layout), asyncPool.size());
@@ -134,6 +125,13 @@ public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListe
 
     public void inflateAll(@NonNull Collection<Integer> layouts) {
         for (Integer layout : layouts) inflate(layout);
+    }
+
+    public void inflateAll(@NonNull Map<Integer, Integer> layoutsToCount) {
+        for (Integer layout : layoutsToCount.keySet()) {
+            int count = Objects.requireNonNull(layoutsToCount.get(layout));
+            inflate(layout, count);
+        }
     }
 
     public void inflate(@LayoutRes int layout, int count) {
@@ -195,7 +193,7 @@ public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListe
             return;
         }
 
-        List<View> views = asyncInflatedViews.get(layout);
+        Queue<View> views = asyncInflatedViews.get(layout);
         if (views == null) views = new LinkedList<>();
 
         views.add(view);
