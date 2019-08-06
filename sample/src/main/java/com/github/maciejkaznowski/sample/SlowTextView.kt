@@ -9,7 +9,7 @@ class SlowTextView @JvmOverloads constructor(
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     init {
-//        Thread.sleep(1000L)
+        Thread.sleep(50L)
     }
 
 }
