@@ -2,6 +2,8 @@
 
 A library to asynchronously inflate views ahead of time to use later, with automatic memory management.
 
+![alt text](https://raw.githubusercontent.com/maciej-kaznowski/AsyncViewPool/docs/img/Screenshot_Sample_20190806-180447.png
+
 ## Installation
 
 TODO
