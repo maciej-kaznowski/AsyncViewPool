@@ -8,12 +8,17 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListener, ComponentCallbacks2 {
@@ -277,7 +282,7 @@ public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListe
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         if (debug) {
             Log.v(TAG, "Received configuration change, clearing views");
         }
