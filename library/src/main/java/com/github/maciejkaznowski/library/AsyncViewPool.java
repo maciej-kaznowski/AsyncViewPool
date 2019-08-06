@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -125,6 +126,18 @@ public class AsyncViewPool implements AsyncLayoutInflater.OnInflateFinishedListe
         }
 
         return null;
+    }
+
+    @NonNull
+    public View getViewOrInflate(@LayoutRes int layout) {
+        View fromViewPool = getView(layout);
+        if (fromViewPool != null) return fromViewPool;
+
+        if (debug) {
+            String msg = String.format("Preinflated View for layout=%s doesn't exist, inflating on MainThread", ViewUtils.getLayoutHexString(layout));
+        }
+
+        return LayoutInflater.from(context).inflate(layout, parent, false);
     }
 
 
